@@ -36,7 +36,7 @@ const properties = [
   {
     errorCode: ErrorTypes.BAD_REQUEST,
     status: 400,
-    message: 'The field ${ this.arg.fieldName } has to be type of ${ this.arg.fieldType }',
+    message: 'The field ${ arg.fieldName } has to be type of ${ arg.fieldType }',
   },
 ];
 
