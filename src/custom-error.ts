@@ -6,21 +6,21 @@ export class CustomError<E extends ErrorTypes> extends Error {
   message: string;
   errorCode: number | string;
 
-  private readonly errorTypes: E;
-  private readonly properties: Properties;
+  readonly #errorTypes: E;
+  readonly #properties: Properties;
 
   constructor(errorTypes: E, properties: Properties) {
     super();
 
-    this.errorTypes = errorTypes;
-    this.properties = properties;
+    this.#errorTypes = errorTypes;
+    this.#properties = properties;
   }
 
   select = (errorName: keyof E, arg?: any) => {
-    this.errorCode = this.errorTypes[errorName];
+    this.errorCode = this.#errorTypes[errorName];
     this.name = errorName.toString();
 
-    const properties = this.properties.find((eachProperties) => eachProperties.errorCode === this.errorCode);
+    const properties = this.#properties.find((eachProperties) => eachProperties.errorCode === this.errorCode);
 
     if (properties === undefined || properties === null) {
       return this;
@@ -29,7 +29,7 @@ export class CustomError<E extends ErrorTypes> extends Error {
     this.status = properties.status;
 
     try {
-      this.message = new Function(`return \`${properties.message}\`;`).call(arg);
+      this.message = new Function('arg', `return \`${properties.message}\`;`).call(this, arg);
     } catch (error) {
       this.message = properties.message;
     }
